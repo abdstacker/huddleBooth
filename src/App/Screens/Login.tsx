@@ -14,6 +14,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { useLogin } from "../Hooks/useLogin";
+import Toast from "../Components/Toast";
 
 const validationSchema = yup.object({
   email: yup
@@ -27,6 +28,7 @@ const validationSchema = yup.object({
 });
 
 export const Login = () => {
+  const [toastOpen, setToastOpen] = React.useState<boolean>(false);
   const { Login } = useLogin();
   const formik = useFormik({
     initialValues: {
@@ -35,12 +37,19 @@ export const Login = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      Login(values.email, values.password);
+      Login(values.email, values.password, setToastOpen);
     },
   });
+  const token = window.localStorage.getItem("token");
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+      <Toast
+        open={toastOpen}
+        setOpen={setToastOpen}
+        text={token ? "Logged In Successfully" : "Incorrect Email or Password"}
+        severity={token ? "success" : "error"}
+      />
       <Box
         sx={{
           marginTop: 8,

@@ -1,6 +1,10 @@
 import axios from "axios";
 export const useLogin = () => {
-  const Login = (email: string, password: string) => {
+  const Login = (
+    email: string,
+    password: string,
+    setToastOpen: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
     const userType = "brands";
     const baseUrl = `https://project2-p2.herokuapp.com/api/${userType}`;
 
@@ -20,9 +24,12 @@ export const useLogin = () => {
       .then(function (response) {
         window.localStorage.setItem("token", response.data.token);
         console.log(response.data);
+        setToastOpen(true);
       })
       .catch(function (response) {
+        window.localStorage.setItem("token", "");
         console.log(response.data);
+        setToastOpen(true);
       });
   };
   return { Login };
