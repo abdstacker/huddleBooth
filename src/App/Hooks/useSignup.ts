@@ -1,5 +1,7 @@
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 export const useSignup = () => {
+  const navigate = useNavigate();
   const Signup = (
     username: string,
     email: string,
@@ -24,7 +26,8 @@ export const useSignup = () => {
 
     axios(config)
       .then(function (response) {
-        window.localStorage.setItem("token", response.data.token);
+        window.localStorage.setItem("token", response.data.brand.token);
+        response.data.brand.token && navigate("/feed");
         console.log(response.data);
         setToastOpen(true);
         setLoading(false);

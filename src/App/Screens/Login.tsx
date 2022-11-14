@@ -15,7 +15,7 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import { useLogin } from "../Hooks/useLogin";
 import Toast from "../Components/Toast";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const validationSchema = yup.object({
   email: yup
@@ -44,12 +44,6 @@ export const Login = () => {
     },
   });
   const token = window.localStorage.getItem("token");
-  const navigate = useNavigate();
-
-  const handleLinkSignUp = () => {
-    navigate("/signup");
-  };
-  const handleLinkForgotPassword = () => {};
 
   return (
     <Container component="main" maxWidth="xs">
@@ -78,13 +72,10 @@ export const Login = () => {
         <Box component="form" onSubmit={formik.handleSubmit} sx={{ mt: 1 }}>
           <TextField
             margin="normal"
-            required
             fullWidth
             id="email"
             label="Email Address"
             name="email"
-            autoComplete="email"
-            autoFocus
             value={formik.values.email}
             onChange={formik.handleChange}
             error={formik.touched.email && Boolean(formik.errors.email)}
@@ -93,7 +84,6 @@ export const Login = () => {
           />
           <TextField
             margin="normal"
-            required
             fullWidth
             name="password"
             label="Password"
@@ -121,24 +111,17 @@ export const Login = () => {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Typography
-                sx={{ cursor: "pointer", textDecoration: "underline" }}
-                color="secondary"
-                variant="body2"
-                onClick={handleLinkForgotPassword}
-              >
-                Forgot password?
-              </Typography>
+              <Link to="/" style={{ fontSize: "0.75rem", color: "#303030" }}>
+                Forgot Password
+              </Link>
             </Grid>
             <Grid item>
-              <Typography
-                sx={{ cursor: "pointer", textDecoration: "underline" }}
-                color="secondary"
-                variant="subtitle2"
-                onClick={handleLinkSignUp}
+              <Link
+                to="/signup"
+                style={{ fontSize: "0.75rem", color: "#303030" }}
               >
-                Don't have an account? Sign Up
-              </Typography>
+                Not a member? Sign Up
+              </Link>
             </Grid>
           </Grid>
         </Box>

@@ -15,7 +15,7 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import { useSignup } from "../Hooks/useSignup";
 import Toast from "../Components/Toast";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const validationSchema = yup.object({
   username: yup
@@ -56,12 +56,7 @@ export const Signup = () => {
     },
   });
 
-  const navigate = useNavigate();
   const token = window.localStorage.getItem("token");
-  const handleLinkSignin = () => {
-    navigate("/");
-  };
-  const handleLinkForgotPassword = () => {};
 
   return (
     <Container component="main" maxWidth="xs">
@@ -90,13 +85,11 @@ export const Signup = () => {
         <Box component="form" onSubmit={formik.handleSubmit} sx={{ mt: 1 }}>
           <TextField
             margin="normal"
-            required
             fullWidth
             id="username"
             label="Username"
             name="username"
             autoComplete="username"
-            autoFocus
             value={formik.values.username}
             onChange={formik.handleChange}
             error={formik.touched.username && Boolean(formik.errors.username)}
@@ -105,13 +98,11 @@ export const Signup = () => {
           />
           <TextField
             margin="normal"
-            required
             fullWidth
             id="email"
             label="Email Address"
             name="email"
             autoComplete="email"
-            autoFocus
             value={formik.values.email}
             onChange={formik.handleChange}
             error={formik.touched.email && Boolean(formik.errors.email)}
@@ -120,7 +111,6 @@ export const Signup = () => {
           />
           <TextField
             margin="normal"
-            required
             fullWidth
             name="password"
             label="Password"
@@ -146,26 +136,11 @@ export const Signup = () => {
           >
             Sign Up
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Typography
-                sx={{ cursor: "pointer", textDecoration: "underline" }}
-                color="secondary"
-                variant="body2"
-                onClick={handleLinkForgotPassword}
-              >
-                Forgot password?
-              </Typography>
-            </Grid>
+          <Grid container justifyContent="center">
             <Grid item>
-              <Typography
-                sx={{ cursor: "pointer", textDecoration: "underline" }}
-                color="secondary"
-                variant="subtitle2"
-                onClick={handleLinkSignin}
-              >
-                {"Already a member? Signin instead"}
-              </Typography>
+              <Link to="/" style={{ fontSize: "0.75rem", color: "#303030" }}>
+                Already a member? Sign In
+              </Link>
             </Grid>
           </Grid>
         </Box>
