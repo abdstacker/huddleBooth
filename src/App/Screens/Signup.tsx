@@ -14,11 +14,15 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { useLogin } from "../Hooks/useLogin";
+import { useSignup } from "../Hooks/useSignup";
 import Toast from "../Components/Toast";
 import { useNavigate } from "react-router-dom";
 
 const validationSchema = yup.object({
+  username: yup
+    .string()
+    .min(6, "Username length should at least be 6")
+    .required("Username is required"),
   email: yup
     .string()
     .email("Enter a valid email")
@@ -29,26 +33,34 @@ const validationSchema = yup.object({
     .required("Password is required"),
 });
 
-export const Login = () => {
+export const Signup = () => {
   const [toastOpen, setToastOpen] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
-  const { Login } = useLogin();
+  const { Signup } = useSignup();
+
   const formik = useFormik({
     initialValues: {
+      username: "",
       email: "",
       password: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       setLoading(true);
-      Login(values.email, values.password, setToastOpen, setLoading);
+      Signup(
+        values.username,
+        values.email,
+        values.password,
+        setToastOpen,
+        setLoading
+      );
     },
   });
-  const token = window.localStorage.getItem("token");
-  const navigate = useNavigate();
 
-  const handleLinkSignUp = () => {
-    navigate("/signup");
+  const navigate = useNavigate();
+  const token = window.localStorage.getItem("token");
+  const handleLinkSignin = () => {
+    navigate("/");
   };
   const handleLinkForgotPassword = () => {};
 
@@ -58,7 +70,7 @@ export const Login = () => {
       <Toast
         open={toastOpen}
         setOpen={setToastOpen}
-        text={token ? "Logged In Successfully" : "Incorrect Email or Password"}
+        text={token ? "Signup Successfully" : "Email already exists"}
         severity={token ? "success" : "error"}
       />
       <Box
@@ -74,9 +86,24 @@ export const Login = () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Sign Up
         </Typography>
         <Box component="form" onSubmit={formik.handleSubmit} sx={{ mt: 1 }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
+            autoFocus
+            value={formik.values.username}
+            onChange={formik.handleChange}
+            error={formik.touched.username && Boolean(formik.errors.username)}
+            helperText={formik.touched.username && formik.errors.username}
+            onBlur={formik.handleBlur}
+          />
           <TextField
             margin="normal"
             required
@@ -118,7 +145,7 @@ export const Login = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign In
+            Sign Up
           </Button>
           <Grid container>
             <Grid item xs>
@@ -136,9 +163,9 @@ export const Login = () => {
                 sx={{ cursor: "pointer", textDecoration: "underline" }}
                 color="secondary"
                 variant="subtitle2"
-                onClick={handleLinkSignUp}
+                onClick={handleLinkSignin}
               >
-                Don't have an account? Sign Up
+                {"Already a member? Signin instead"}
               </Typography>
             </Grid>
           </Grid>
