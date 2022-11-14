@@ -3,7 +3,7 @@ export const useLogin = () => {
   const Login = (email: string, password: string) => {
     const userType = "brands";
     const baseUrl = `https://project2-p2.herokuapp.com/api/${userType}`;
-    const userTypeData = userType.slice(0, -1);
+
     const data: { [key: string]: any } = {
       brand: { email: email, password: password },
     };
