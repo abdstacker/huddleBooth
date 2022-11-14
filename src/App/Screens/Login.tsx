@@ -9,6 +9,7 @@ import {
   Box,
   Typography,
   Container,
+  CircularProgress,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import * as yup from "yup";
@@ -29,6 +30,7 @@ const validationSchema = yup.object({
 
 export const Login = () => {
   const [toastOpen, setToastOpen] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const { Login } = useLogin();
   const formik = useFormik({
     initialValues: {
@@ -37,7 +39,8 @@ export const Login = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      Login(values.email, values.password, setToastOpen);
+      setLoading(true);
+      Login(values.email, values.password, setToastOpen, setLoading);
     },
   });
   const token = window.localStorage.getItem("token");
@@ -95,6 +98,12 @@ export const Login = () => {
             helperText={formik.touched.password && formik.errors.password}
             onBlur={formik.handleBlur}
           />
+          {loading && (
+            <Grid container justifyContent="center">
+              <CircularProgress color="secondary" />
+            </Grid>
+          )}
+
           <Button
             type="submit"
             fullWidth
