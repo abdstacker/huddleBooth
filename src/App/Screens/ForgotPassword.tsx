@@ -13,7 +13,7 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { useLogin } from "../Hooks/useLogin";
+import { useForgot } from "../Hooks/useForgot";
 import Toast from "../Components/Toast";
 import { Link } from "react-router-dom";
 
@@ -22,28 +22,23 @@ const validationSchema = yup.object({
     .string()
     .email("Enter a valid email")
     .required("Email is required"),
-  password: yup
-    .string()
-    .min(6, "Password should be of minimum 6 characters length")
-    .required("Password is required"),
 });
 
-export const Login = () => {
+export const ForgotPassword = () => {
   const [toastOpen, setToastOpen] = React.useState<boolean>(false);
+  const [forgotResponse, setForgotResponse] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
-  const { Login } = useLogin();
+  const { Forgot } = useForgot();
   const formik = useFormik({
     initialValues: {
       email: "",
-      password: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       setLoading(true);
-      Login(values.email, values.password, setToastOpen, setLoading);
+      Forgot(values.email, setToastOpen, setLoading, setForgotResponse);
     },
   });
-  const token = window.localStorage.getItem("token");
 
   return (
     <Container component="main" maxWidth="xs">
@@ -51,8 +46,12 @@ export const Login = () => {
       <Toast
         open={toastOpen}
         setOpen={setToastOpen}
-        text={token ? "Logged In Successfully" : "Incorrect Email or Password"}
-        severity={token ? "success" : "error"}
+        text={
+          forgotResponse
+            ? "A code to reset password has been sent to your email"
+            : "Email does not exist"
+        }
+        severity={forgotResponse ? "success" : "error"}
       />
       <Box
         sx={{
@@ -67,7 +66,7 @@ export const Login = () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Forgot Password
         </Typography>
         <Box component="form" onSubmit={formik.handleSubmit} sx={{ mt: 1 }}>
           <TextField
@@ -82,40 +81,23 @@ export const Login = () => {
             helperText={formik.touched.email && formik.errors.email}
             onBlur={formik.handleBlur}
           />
-          <TextField
-            margin="normal"
+          <Button
+            type="submit"
             fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            error={formik.touched.password && Boolean(formik.errors.password)}
-            helperText={formik.touched.password && formik.errors.password}
-            onBlur={formik.handleBlur}
-          />
+            variant="contained"
+            sx={{ mt: 3, mb: 2, textTransform: "none" }}
+          >
+            Request for New Password
+          </Button>
           {loading && (
             <Grid container justifyContent="center">
               <CircularProgress color="secondary" />
             </Grid>
           )}
-
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Sign In
-          </Button>
           <Grid container>
             <Grid item xs>
-              <Link
-                to="/forgotPassword"
-                style={{ fontSize: "0.75rem", color: "#303030" }}
-              >
-                Forgot Password
+              <Link to="/" style={{ fontSize: "0.75rem", color: "#303030" }}>
+                Go back to Sign In
               </Link>
             </Grid>
             <Grid item>
