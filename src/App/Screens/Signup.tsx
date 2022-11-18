@@ -89,7 +89,6 @@ export const Signup = () => {
             id="username"
             label="Username"
             name="username"
-            autoComplete="username"
             value={formik.values.username}
             onChange={formik.handleChange}
             error={formik.touched.username && Boolean(formik.errors.username)}
@@ -102,7 +101,6 @@ export const Signup = () => {
             id="email"
             label="Email Address"
             name="email"
-            autoComplete="email"
             value={formik.values.email}
             onChange={formik.handleChange}
             error={formik.touched.email && Boolean(formik.errors.email)}
