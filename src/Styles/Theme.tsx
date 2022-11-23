@@ -11,20 +11,18 @@ export const theme: ThemeOptions = createTheme({
     },
     action: {
       selected: "#f9c712",
-      selectedOpacity: 1,
+      selectedOpacity: 0.88,
     },
   },
   shape: {
-    borderRadius: 4,
+    borderRadius: 8,
   },
-
   components: {
     MuiButtonBase: {
       defaultProps: {
         disableRipple: true,
       },
     },
-
     MuiDrawer: {
       styleOverrides: {
         paper: {
@@ -60,7 +58,6 @@ export const theme: ThemeOptions = createTheme({
         },
       },
     },
-
     MuiListItemIcon: {
       styleOverrides: {
         root: {

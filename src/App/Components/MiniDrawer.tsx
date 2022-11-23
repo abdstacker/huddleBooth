@@ -2,7 +2,7 @@ import * as React from "react";
 import { styled, Theme, CSSObject } from "@mui/material/styles";
 
 import MuiDrawer from "@mui/material/Drawer";
-
+import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import Badge from "@mui/material/Badge";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -24,6 +24,7 @@ import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import ForumOutlinedIcon from "@mui/icons-material/ForumOutlined";
+import AccountMenu from "./AccountMenu";
 
 const drawerWidth = 250;
 
@@ -75,11 +76,11 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MiniDrawer() {
+export default function MiniDrawer(props: any) {
   const [open, setOpen] = React.useState<boolean>(false);
   const [expandChallenges, setExpandChallenges] = React.useState<boolean>(true);
   const [expandTricks, setExpandTricks] = React.useState<boolean>(true);
-  const [selectedIndex, setSelectedIndex] = React.useState<number | null>(0);
+
   const [expandChallengesIndex, setExpandChallengesIndex] = React.useState<
     number | null
   >(null);
@@ -107,7 +108,7 @@ export default function MiniDrawer() {
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     index: number
   ) => {
-    setSelectedIndex(index);
+    props.setSelectedIndex(index);
     setExpandChallengesIndex(null);
     setExpandTricksIndex(null);
     setToolbarIndex(null);
@@ -118,7 +119,7 @@ export default function MiniDrawer() {
     index: number
   ) => {
     setExpandChallengesIndex(index);
-    setSelectedIndex(1);
+    props.setSelectedIndex(1);
     setExpandTricksIndex(null);
     setToolbarIndex(null);
   };
@@ -129,7 +130,7 @@ export default function MiniDrawer() {
   ) => {
     setExpandTricksIndex(index);
     setExpandChallengesIndex(null);
-    setSelectedIndex(2);
+    props.setSelectedIndex(2);
     setToolbarIndex(null);
   };
 
@@ -137,7 +138,7 @@ export default function MiniDrawer() {
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     index: number
   ) => {
-    setSelectedIndex(null);
+    props.setSelectedIndex(null);
     setExpandChallengesIndex(null);
     setExpandTricksIndex(null);
     setToolbarIndex(index);
@@ -165,6 +166,9 @@ export default function MiniDrawer() {
           >
             <MenuIcon />
           </IconButton>
+          <Box sx={{ ...(!open && { display: "none" }), marginRight: "auto" }}>
+            <AccountMenu />
+          </Box>
           <IconButton
             sx={{ ...(!open && { display: "none" }), color: "inherit" }}
             onClick={handleDrawerClose}
@@ -190,9 +194,11 @@ export default function MiniDrawer() {
                     my: 1,
                     mx: 1,
                     backgroundColor: "secondary.dark",
-                    ...(selectedIndex === index && { color: "common.black" }),
+                    ...(props.selectedIndex === index && {
+                      color: "common.black",
+                    }),
                   }}
-                  selected={selectedIndex === index}
+                  selected={props.selectedIndex === index}
                   onClick={(event) => {
                     handleListItemClick(event, index);
                   }}
@@ -202,7 +208,7 @@ export default function MiniDrawer() {
                       minWidth: 0,
                       mr: open ? 1 : "auto",
                       justifyContent: "center",
-                      ...(selectedIndex === index && {
+                      ...(props.selectedIndex === index && {
                         color: "common.black",
                       }),
                     }}
@@ -238,6 +244,7 @@ export default function MiniDrawer() {
                     <List component="div" disablePadding>
                       {["Past", "Current", "Incoming"].map((text, index) => (
                         <ListItemButton
+                          key={index}
                           sx={{
                             maxHeight: 35,
                             display: open ? "flex" : "none",
@@ -284,7 +291,6 @@ export default function MiniDrawer() {
             )
           )}
         </List>
-
         <List
           sx={{
             display: open ? "flex" : "  none",
@@ -304,6 +310,7 @@ export default function MiniDrawer() {
             { name: "Messages", count: 4 },
           ].map((value, index) => (
             <ListItem
+              key={index}
               disablePadding
               selected={toolbarIndex === index}
               sx={{

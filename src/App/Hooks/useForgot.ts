@@ -1,25 +1,26 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { baseUrl } from "../Config/Config";
 export const useForgot = () => {
   const navigate = useNavigate();
   const Forgot = (
     email: string,
     setToastOpen: React.Dispatch<React.SetStateAction<boolean>>,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    setForgotResponse: React.Dispatch<React.SetStateAction<string>>
+    setForgotResponse: React.Dispatch<React.SetStateAction<string>>,
+    userType: Readonly<string | undefined>
   ) => {
     const changeScreen = () => {
-      navigate("/resetPassword");
+      navigate(`/resetPassword/${userType}`);
     };
-    const userType = "brands";
-    const baseUrl = `https://project2-p2.herokuapp.com/api/${userType}`;
+    const url = `${baseUrl}/api/${userType}s/password`;
 
     const data = {
-      brand: { email: email },
+      [`${userType}`]: { email: email },
     };
     var config = {
       method: "post",
-      url: `${baseUrl}/password`,
+      url: url,
       headers: {
         "Content-Type": "application/json",
       },

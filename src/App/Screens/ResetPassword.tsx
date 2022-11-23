@@ -23,7 +23,7 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import { useResetPassword } from "../Hooks/useResetPassword";
 import Toast from "../Components/Toast";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const validationSchema = yup.object({
   code: yup.string().required("Code is required"),
@@ -49,7 +49,7 @@ export const ResetPassword = () => {
   ) => {
     event.preventDefault();
   };
-
+  const { userType } = useParams<Readonly<string>>();
   const { ResetPassword } = useResetPassword();
   const formik = useFormik({
     initialValues: {
@@ -65,7 +65,8 @@ export const ResetPassword = () => {
         values.password,
         setToastOpen,
         setLoading,
-        setResetResponse
+        setResetResponse,
+        userType
       );
     },
   });
@@ -95,6 +96,14 @@ export const ResetPassword = () => {
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
           <LockOutlinedIcon />
         </Avatar>
+        <Typography
+          variant="h6"
+          color="secondary.main"
+          textTransform="capitalize"
+          marginBottom={2}
+        >
+          {userType}
+        </Typography>
         <Typography component="h1" variant="h5">
           Reset Password
         </Typography>
@@ -195,13 +204,16 @@ export const ResetPassword = () => {
 
           <Grid container>
             <Grid item xs>
-              <Link to="/" style={{ fontSize: "0.75rem", color: "#303030" }}>
+              <Link
+                to={`/login/${userType}`}
+                style={{ fontSize: "0.75rem", color: "#303030" }}
+              >
                 Go back to Sign In
               </Link>
             </Grid>
             <Grid item>
               <Link
-                to="/signup"
+                to={`/signup/${userType}`}
                 style={{ fontSize: "0.75rem", color: "#303030" }}
               >
                 Not a member? Sign Up

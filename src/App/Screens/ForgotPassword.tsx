@@ -15,7 +15,7 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import { useForgot } from "../Hooks/useForgot";
 import Toast from "../Components/Toast";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const validationSchema = yup.object({
   email: yup
@@ -29,6 +29,7 @@ export const ForgotPassword = () => {
   const [forgotResponse, setForgotResponse] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
   const { Forgot } = useForgot();
+  const { userType } = useParams<Readonly<string>>();
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -36,7 +37,13 @@ export const ForgotPassword = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       setLoading(true);
-      Forgot(values.email, setToastOpen, setLoading, setForgotResponse);
+      Forgot(
+        values.email,
+        setToastOpen,
+        setLoading,
+        setForgotResponse,
+        userType
+      );
     },
   });
 
@@ -65,6 +72,14 @@ export const ForgotPassword = () => {
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
           <LockOutlinedIcon />
         </Avatar>
+        <Typography
+          variant="h6"
+          color="secondary.main"
+          textTransform="capitalize"
+          marginBottom={2}
+        >
+          {userType}
+        </Typography>
         <Typography component="h1" variant="h5">
           Forgot Password
         </Typography>
@@ -96,13 +111,16 @@ export const ForgotPassword = () => {
           )}
           <Grid container>
             <Grid item xs>
-              <Link to="/" style={{ fontSize: "0.75rem", color: "#303030" }}>
+              <Link
+                to={`/login/${userType}`}
+                style={{ fontSize: "0.75rem", color: "#303030" }}
+              >
                 Go back to Sign In
               </Link>
             </Grid>
             <Grid item>
               <Link
-                to="/signup"
+                to={`/signup/${userType}`}
                 style={{ fontSize: "0.75rem", color: "#303030" }}
               >
                 Not a member? Sign Up

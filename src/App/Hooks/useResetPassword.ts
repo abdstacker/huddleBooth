@@ -1,4 +1,5 @@
 import axios from "axios";
+import { baseUrl } from "../Config/Config";
 import { useNavigate } from "react-router-dom";
 export const useResetPassword = () => {
   const navigate = useNavigate();
@@ -7,22 +8,23 @@ export const useResetPassword = () => {
     password: string,
     setToastOpen: React.Dispatch<React.SetStateAction<boolean>>,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    setResetResponse: React.Dispatch<React.SetStateAction<number | null>>
+    setResetResponse: React.Dispatch<React.SetStateAction<number | null>>,
+    userType: Readonly<string | undefined>
   ) => {
     const changeScreen = () => {
-      navigate("/");
+      navigate(`/login/${userType}`);
     };
-    const userType = "brands";
-    const baseUrl = `https://project2-p2.herokuapp.com/api/${userType}`;
+
+    const url = `${baseUrl}/api/${userType}s/password`;
     const data = {
-      brand: {
+      [`${userType}`]: {
         password: password,
         reset_password_token: code,
       },
     };
     var config = {
       method: "patch",
-      url: `${baseUrl}/password`,
+      url: url,
       headers: {
         "Content-Type": "application/json",
       },

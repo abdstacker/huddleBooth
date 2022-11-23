@@ -9,13 +9,16 @@ import {
   Typography,
   Container,
   CircularProgress,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import SwitchAccountIcon from "@mui/icons-material/SwitchAccount";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { useLogin } from "../Hooks/useLogin";
 import Toast from "../Components/Toast";
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 
 const validationSchema = yup.object({
   email: yup
@@ -31,7 +34,10 @@ const validationSchema = yup.object({
 export const Login = () => {
   const [toastOpen, setToastOpen] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
+  const { userType } = useParams<Readonly<string>>();
   const { Login } = useLogin();
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -40,10 +46,19 @@ export const Login = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       setLoading(true);
-      Login(values.email, values.password, setToastOpen, setLoading);
+      Login(values.email, values.password, setToastOpen, setLoading, userType);
     },
   });
   const token = window.localStorage.getItem("token");
+  const handleSwitchAccount = () => {
+    if (userType === "admin") {
+      navigate("/login/brand");
+    } else if (userType === "brand") {
+      navigate("/login/customer");
+    } else if (userType === "customer") {
+      navigate("/login/admin");
+    }
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -66,6 +81,14 @@ export const Login = () => {
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
           <LockOutlinedIcon />
         </Avatar>
+        <Typography
+          variant="h6"
+          color="secondary.main"
+          textTransform="capitalize"
+          marginBottom={2}
+        >
+          {userType}
+        </Typography>
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
@@ -107,12 +130,12 @@ export const Login = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign In
+            Sign In as {userType}
           </Button>
           <Grid container>
             <Grid item xs>
               <Link
-                to="/forgotPassword"
+                to={`/forgotPassword/${userType}`}
                 style={{ fontSize: "0.75rem", color: "#303030" }}
               >
                 Forgot Password
@@ -120,7 +143,7 @@ export const Login = () => {
             </Grid>
             <Grid item>
               <Link
-                to="/signup"
+                to={`/signup/${userType}`}
                 style={{ fontSize: "0.75rem", color: "#303030" }}
               >
                 Not a member? Sign Up
@@ -128,6 +151,11 @@ export const Login = () => {
             </Grid>
           </Grid>
         </Box>
+        <Tooltip title="Switch User">
+          <IconButton onClick={handleSwitchAccount}>
+            <SwitchAccountIcon />
+          </IconButton>
+        </Tooltip>
       </Box>
     </Container>
   );

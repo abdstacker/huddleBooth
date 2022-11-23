@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import {
   Avatar,
   Button,
@@ -9,13 +9,16 @@ import {
   Typography,
   Container,
   CircularProgress,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import SwitchAccountIcon from "@mui/icons-material/SwitchAccount";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { useSignup } from "../Hooks/useSignup";
 import Toast from "../Components/Toast";
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 
 const validationSchema = yup.object({
   username: yup
@@ -36,6 +39,8 @@ export const Signup = () => {
   const [toastOpen, setToastOpen] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
   const { Signup } = useSignup();
+  const { userType } = useParams<Readonly<string>>();
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -51,12 +56,22 @@ export const Signup = () => {
         values.email,
         values.password,
         setToastOpen,
-        setLoading
+        setLoading,
+        userType
       );
     },
   });
 
   const token = window.localStorage.getItem("token");
+  const handleSwitchAccount = () => {
+    if (userType === "admin") {
+      navigate("/signup/brand");
+    } else if (userType === "brand") {
+      navigate("/signup/customer");
+    } else if (userType === "customer") {
+      navigate("/signup/admin");
+    }
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -79,6 +94,14 @@ export const Signup = () => {
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
           <LockOutlinedIcon />
         </Avatar>
+        <Typography
+          variant="h6"
+          color="secondary.main"
+          textTransform="capitalize"
+          marginBottom={2}
+        >
+          {userType}
+        </Typography>
         <Typography component="h1" variant="h5">
           Sign Up
         </Typography>
@@ -132,16 +155,24 @@ export const Signup = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign Up
+            Sign Up as {userType}
           </Button>
           <Grid container justifyContent="center">
             <Grid item>
-              <Link to="/" style={{ fontSize: "0.75rem", color: "#303030" }}>
+              <Link
+                to={`/login/${userType}`}
+                style={{ fontSize: "0.75rem", color: "#303030" }}
+              >
                 Already a member? Sign In
               </Link>
             </Grid>
           </Grid>
         </Box>
+        <Tooltip title="Switch User">
+          <IconButton onClick={handleSwitchAccount}>
+            <SwitchAccountIcon />
+          </IconButton>
+        </Tooltip>
       </Box>
     </Container>
   );
