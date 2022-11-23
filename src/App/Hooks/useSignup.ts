@@ -11,7 +11,7 @@ export const useSignup = () => {
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
     userType: Readonly<string | undefined>
   ) => {
-    const url = `${baseUrl}/api/${userType}.json`;
+    const url = `${baseUrl}/api/${userType}s`;
 
     const data: { [key: string]: any } = {
       [`${userType}`]: { username: username, email: email, password: password },
@@ -30,8 +30,10 @@ export const useSignup = () => {
         if (userType !== undefined) {
           window.localStorage.setItem("token", response.data[userType].token);
           window.localStorage.setItem("authUser", userType);
+          response.data[userType].token &&
+            navigate(`/landingPage/${userType}/feed`);
         }
-        response.data.brand.token && navigate(`/landingPage/${userType}`);
+
         console.log(response.data);
         setToastOpen(true);
         setLoading(false);
