@@ -8,10 +8,20 @@ export const theme: ThemeOptions = createTheme({
     secondary: {
       main: "#303030",
       dark: "#242424",
+      light: "#f6f6f6",
     },
     action: {
       selected: "#f9c712",
       selectedOpacity: 0.88,
+    },
+  },
+  typography: {
+    h5: {
+      fontWeight: 600,
+      fontSize: "1.6rem",
+    },
+    h6: {
+      fontWeight: 600,
     },
   },
   shape: {
@@ -34,7 +44,7 @@ export const theme: ThemeOptions = createTheme({
     MuiListItemButton: {
       styleOverrides: {
         root: {
-          borderRadius: "8px",
+          borderRadius: 5,
           py: 0,
           "&:hover": {
             //you want this to be the same as the backgroundColor above
